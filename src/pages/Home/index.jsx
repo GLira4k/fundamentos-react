@@ -1,32 +1,54 @@
+import React from "react";
 import "./styles.css";
-import { Card } from '../../components/Card';
+import { Card } from "../../components/Card";
+import { useState } from "react";
 
 export function Home() {
-  const studentName= "";
+  //const [aonde eu vou guardar o conteúdo do estado, qual a função que atualiza esse estado] = useState();
 
-  function handleNameChange(name){
-    studentName = name;
+  const [studentName, setStudentName] = useState(" ");
+
+  const [students, setStudents] = useState([]);
+
+  function handleAddStudent() {
+    const newStudent = {
+      name: studentName,
+      time: new Date().toLocaleTimeString("pt-br", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+    };
+
+    
+    // setStudents(Estado anterior => [spread operator estado anterior, novo estado]);
+    setStudents(prevState => [...prevState, newStudent]);
   }
 
   return (
     <main>
       <section className="container">
         <h1>Lista de Presença</h1>
-        <input required 
-        type="text" 
-        className="input" 
-        placeholder="Digite um nome"
-        onChange={e => handleNameChange(e.target.value)}
+        <input
+          required
+          type="text"
+          className="input"
+          placeholder="Digite um nome"
+          onChange={(e) => setStudentName(e.target.value)}
         />
-        <button type="button" className="btn"> 
+        <button type="button" className="btn" onClick={handleAddStudent}>
           Adicionar
         </button>
-        <Card name="Germano" time="09:02:14"/>
-        <Card name="Gabriel" time="10:25:51"/>
-        <Card name="Lucas" time="11:37:44"/> 
+        {students.map((student) => (
+          <Card name={student.name} time={student.time} />
+        ))}
       </section>
     </main>
- );
+  );
 }
 
-//Ao gerar uma alteração de estado ele provoca uma nova renderização.
+//uma variavel comum não tem o poder de refletir na interface o novo conteúdo, por isso utilizamos state.
+
+//Ao gerar uma alteração de estado ele provoca uma nova renderização, refletindo na interface o novo conteúdo.
+
+//React tem um algoritmo chamado de Algoritmo de Reconciliação para fazer essa atualização.
